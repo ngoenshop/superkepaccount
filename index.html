@@ -339,6 +339,7 @@ input[type=range]{width:100%;accent-color:var(--plum)}
   </div>
 
   <div class="ap" id="a-ord">
+   <div class="seg" style="margin-top:0"><button id="oWait" class="on" onclick="ordF='wait';renderAdmin()">รอตรวจ</button><button id="oDone" onclick="ordF='done';renderAdmin()">เสร็จสิ้น</button><button id="oNo" onclick="ordF='no';renderAdmin()">ปฏิเสธ</button><button id="oAll" onclick="ordF='all';renderAdmin()">ทั้งหมด</button></div>
    <input class="search" placeholder="ค้นหาเลขคำสั่งซื้อ / อีเมล / สินค้า" oninput="aq.ord=this.value;renderAdmin()">
    <div id="ordList"></div>
   </div>
@@ -376,7 +377,7 @@ input[type=range]{width:100%;accent-color:var(--plum)}
 
 <div class="nav" id="nav">
  <button onclick="go('home')" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg>หน้าร้าน</button>
- <button onclick="go('topup')" data-v="topup"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10.5h18"/><path d="M7 15h4"/><circle cx="17" cy="15" r="1" fill="currentColor" stroke="none"/></svg>เติมเครดิต</button>
+ <button onclick="go('orders')" data-v="orders"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>ประวัติซื้อ</button>
  <button onclick="go('review')" data-v="review"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 16.9l-5.3 2.8 1.1-5.9-4.3-4.1 5.9-.8z"/></svg>เขียนรีวิว</button>
  <button onclick="navAdmin()" data-v="admin" id="navAdmin" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>หลังบ้าน<span class="badge" id="navBadge" style="display:none"></span></button>
 </div>
@@ -426,7 +427,7 @@ const FXT=[['none','ปิด'],['snow','❄️ หิมะ'],['star','✨ ด�
 const FXC=['#FFFFFF','#F9C9DA','#FFD76A','#BFE8D8','#D9CCF5','#8E2C5E','#9AD0FF'];
 const PT={bank:['🏦','บัญชีธนาคาร'],pp:['📱','พร้อมเพย์'],tw:['🧡','ทรูมันนี่ วอลเล็ท']};
 const BANKS=['กสิกรไทย','ไทยพาณิชย์','กรุงเทพ','กรุงไทย','กรุงศรี','ทหารไทยธนชาต','ออมสิน','ธ.ก.ส.'];
-const DEF={desc:'🍰 ร้านขายแอปพรีเมียมราคาดี\nเติมเครดิตแล้วซื้อได้เลย ได้บัญชีทันทีหลังชำระ',banner:'',logo:'',web:'',users:0,resellerOpen:true,
+const DEF={desc:'🍰 ร้านขายแอปพรีเมียมราคาดี\nเลือกสินค้า โอนเงิน แนบสลิป รอร้านส่งบัญชีให้ในประวัติการซื้อ',banner:'',logo:'',web:'',users:0,resellerOpen:true,
  mq:{text:'🎉 ยินดีต้อนรับสู่ superkepaccount',speed:14,bg:'#F2E6FA',fg:'#B07CC6',fr:'f-round'},
  ct:[{i:'💚',n:'LINE',v:''},{i:'📘',n:'Facebook',v:''},{i:'📸',n:'Instagram',v:''},{i:'🎵',n:'TikTok',v:''},{i:'📞',n:'โทร',v:''},{i:'✉️',n:'อีเมล',v:''}],
  theme:{c:{...PRESET['พาสเทล']},fh:'Mitr',fb:'Anuphan'},
@@ -434,7 +435,7 @@ const DEF={desc:'🍰 ร้านขายแอปพรีเมียมร�
 
 /* ===== state ===== */
 let shop=JSON.parse(JSON.stringify(DEF)),cats=[],P=[],user=null,myOrders=[],myTops=[];
-let members=[],orders=[],tops=[],notis=[],slips=[],mySlips=[],slipF='wait',HL=[],RV=[],rvStars=5,rvData='',stH=null,stI=0,adminOn=false,adminUnsubs=[],userUnsubs=[];
+let members=[],orders=[],tops=[],notis=[],slips=[],mySlips=[],slipF='wait',ordF='wait',HL=[],RV=[],rvStars=5,rvData='',stH=null,stI=0,adminOn=false,adminUnsubs=[],userUnsubs=[];
 let mode='login',taps=0,tapT,pending=null,cat='',q='',cart={},registering=false;
 let aTab='dash',aq={},memF='all',newCatImg='',slipData='';
 let mqD={},thD={},fxD={};
@@ -519,7 +520,7 @@ function refresh(){
 function renderNav(){const cur=[...document.querySelectorAll('.view')].find(v=>v.classList.contains('on'))?.id.slice(2);
  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===cur));
  const adm=user&&isAdminUser();$('navAdmin').style.display=adm?'':'none';
- const n=adminOn?slips.filter(x=>x.status==='wait').length+unread():0;$('navBadge').textContent=n;$('navBadge').style.display=n?'grid':'none'}
+ const n=adminOn?slips.filter(x=>x.status==='wait').length+orders.filter(o=>o.status==='wait').length+unread():0;$('navBadge').textContent=n;$('navBadge').style.display=n?'grid':'none'}
 function navAdmin(){if(adminRole==='unverified')return toast('ยืนยันอีเมลก่อน จากเมนูโปรไฟล์');if(adminOn)return go('admin');openPin()}
 /* ===== ไฮไลท์ ===== */
 function renderHl(){const w=$('hlWrap');if(!w)return;w.style.display=HL.length?'':'none';
@@ -574,13 +575,40 @@ function renderCart(){const items=Object.entries(cart);
  const t=tot(),c=user?user.credit||0:0,ok=c>=t;
  $('cartList').innerHTML=items.map(([id,n])=>{const p=P.find(x=>x.id==id);if(!p)return'';return `<div class="box"><div class="row"><span>${esc(p.n)}</span><b>฿${pr(p)*n}</b></div><div class="row"><span class="muted">฿${pr(p)} × ${n}</span><div class="step" style="width:130px"><button onclick="add('${id}',-1)">−</button><b>${n}</b><button class="p" onclick="add('${id}',1)">+</button></div></div></div>`}).join('')+
  `<div class="box"><div class="row"><span>ยอดรวม</span><b>฿${t}</b></div><div class="row"><span>เครดิตคงเหลือ</span><b>฿${c}</b></div><div class="row"><span>หลังชำระ</span><b style="color:${ok?'var(--mint)':'var(--red)'}">฿${c-t}</b></div></div>`+
- (ok?`<button class="btn" id="payBtn" onclick="pay()">ชำระด้วยเครดิต ฿${t}</button>`:`<button class="btn ghost" onclick="go('topup')">เครดิตไม่พอ ขาดอีก ฿${t-c} ไปเติมเครดิต</button>`)}
+ `<button class="btn" onclick="checkout()">💸 ชำระเงิน / แนบสลิป ฿${t}</button>`+(ok?`<button class="btn ghost" id="payBtn" style="margin-top:8px" onclick="pay()">หรือชำระด้วยเครดิต ฿${t}</button>`:'')}
+let coData='';
+function checkout(){if(!user)return needLogin(checkout);const items=Object.entries(cart).map(([id,n])=>{const p=P.find(x=>x.id==id);return p?{pid:id,pname:p.n,q:n,price:pr(p)}:null}).filter(Boolean);if(!items.length)return;
+ if(myOrders.filter(o=>o.status==='wait').length>=3)return toast('มีออเดอร์รอตรวจอยู่ 3 รายการแล้ว รอร้านตรวจก่อนนะคะ');
+ const t=tot();coData='';const on=(shop.pays||[]).filter(p=>p.on);
+ $('sheetIn').innerHTML=`<div class="row"><h2 style="margin:0">ชำระเงิน ฿${t}</h2><button class="x" onclick="closeSheet()" aria-label="ปิด">✕</button></div>
+ <div class="muted" style="margin:6px 0 10px">${items.map(i=>`${esc(i.pname)} ×${i.q}`).join(', ')}</div>
+ <h3 style="margin-top:6px">1. โอนเงินมาที่</h3>
+ ${on.length?on.map(p=>`<div class="box"><div class="row"><b>${PT[p.t][0]} ${p.t==='bank'?esc(p.bank):PT[p.t][1]}</b></div>${p.t==='pp'&&p.qr?`<img src="${esc(p.qr)}" alt="QR" style="width:170px;display:block;margin:8px auto;border-radius:12px">`:''}<div class="row"><div><div style="font-size:18px;font-weight:600">${esc(p.no)}</div><div class="muted">${esc(p.name)}</div></div><button class="btn ghost small" onclick="copyTxt('${jsq(String(p.no).replace(/-/g,''))}')">คัดลอก</button></div></div>`).join(''):'<div class="box muted">ร้านยังไม่ได้เปิดช่องทางชำระเงิน</div>'}
+ <h3>2. แนบสลิป</h3>
+ <label class="drop upbtn" style="display:block;cursor:pointer;padding:16px">📎 แตะเพื่อแนบสลิปโอนเงิน<input type="file" accept="image/*" onchange="pickCo(this)"></label>
+ <img id="coPrev" alt="" style="display:none;max-width:100%;max-height:260px;margin:10px auto 0;border-radius:12px">
+ <div class="field" style="margin-top:10px"><label>หมายเหตุถึงร้าน (ถ้ามี)</label><input id="coNote" maxlength="120" placeholder="เช่น อีเมลที่ต้องการให้ส่ง"></div>
+ <button class="btn" id="coBtn" disabled onclick="sendOrder()">ส่งออเดอร์ให้ร้านตรวจสอบ</button>
+ <div class="muted" style="text-align:center;margin-top:8px">ร้านตรวจสลิปแล้วจะส่งอีเมล/รหัสผ่านให้ใน "ประวัติการซื้อ"</div>`;openSheet()}
+function pickCo(inp){const f=inp.files[0];if(!f)return;inp.value='';const im=new Image();im.onload=()=>{const m=1600,sc=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*sc;c.height=im.height*sc;c.getContext('2d').drawImage(im,0,0,c.width,c.height);coData=c.toDataURL('image/jpeg',.9);$('coPrev').src=coData;$('coPrev').style.display='block';$('coBtn').disabled=false;URL.revokeObjectURL(im.src)};im.src=URL.createObjectURL(f)}
+async function sendOrder(){if(!coData||!user)return;const b=$('coBtn');b.disabled=true;b.textContent='กำลังส่ง...';
+ try{const items=Object.entries(cart).map(([id,n])=>{const p=P.find(x=>x.id==id);return p?{pid:id,pname:p.n,q:n,price:pr(p)}:null}).filter(Boolean);const t=items.reduce((a,i)=>a+i.price*i.q,0),q=items.reduce((a,i)=>a+i.q,0);
+  const fd=new FormData();fd.append('image',coData.split(',')[1]);const r=await fetch('https://api.imgbb.com/1/upload?key='+IMGBB_KEY,{method:'POST',body:fd});const j=await r.json();if(!j.success)throw new Error('อัปโหลดสลิปไม่สำเร็จ ลองใหม่');
+  await db.collection('orders').add({uid:user.uid,email:user.email,name:user.name||'',items,pname:items.map(i=>`${i.pname}×${i.q}`).join(', '),paid:t,q,slip:j.data.display_url||j.data.url,note:($('coNote').value||'').trim(),status:'wait',u:'',pw:'',reply:'',t:TS()});
+  await db.collection('notis').add({msg:`${user.name||user.email} สั่งซื้อ ${items.map(i=>`${i.pname}×${i.q}`).join(', ')} ฿${t} (แนบสลิป)`.slice(0,190),go:'ord',read:false,t:TS()}).catch(()=>{});
+  cart={};coData='';closeSheet();toast('ส่งออเดอร์แล้ว รอร้านตรวจสอบ');go('orders')}
+ catch(e){toast(e.message||'ส่งไม่สำเร็จ');b.disabled=false;b.textContent='ส่งออเดอร์ให้ร้านตรวจสอบ'}}
 async function callFn(name,body){const token=await auth.currentUser.getIdToken();
  const r=await fetch('/.netlify/functions/'+name,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify(body)});
  let j={};try{j=await r.json()}catch(e){}if(!r.ok)throw new Error(j.error||'เกิดข้อผิดพลาด ลองใหม่อีกครั้ง');return j}
 async function pay(){const b=$('payBtn');b.disabled=true;b.textContent='กำลังสั่งซื้อ...';
  try{await callFn('buy',{items:cart});cart={};toast('ชำระสำเร็จ ได้รับบัญชีแล้ว');go('orders')}catch(e){toast(e.message);b.disabled=false;renderCart()}}
-function renderOrders(){$('orders').innerHTML=myOrders.length?myOrders.map(o=>`<div class="box"><div class="row"><b>${esc(o.pname)}</b><span class="muted">฿${o.paid}</span></div><div class="muted">${shortId(o.id)} · ${fmt(o.t)}</div><div class="acc">อีเมล/ยูส: ${esc(o.u)}<br>รหัสผ่าน: ${esc(o.pw)}</div><button class="btn ghost" style="margin-top:8px;padding:7px" onclick="copyTxt('${jsq(o.u+' / '+o.pw)}')">คัดลอก</button></div>`).join(''):'<div class="box muted" style="text-align:center">ยังไม่มีประวัติการซื้อ</div>'}
+const OST={wait:['⏳ รอร้านตรวจสอบ','var(--plum)'],done:['✓ ดำเนินการเสร็จสิ้น','var(--mint)'],no:['✕ ปฏิเสธ','var(--red)']};
+const ost=o=>OST[o.status||'done']||OST.done;
+function renderOrders(){$('orders').innerHTML=myOrders.length?myOrders.map(o=>{const [t,c]=ost(o),st=o.status||'done';return `<div class="box"><div class="row"><b>${esc(o.pname)}</b><b style="color:${c};font-size:13px;white-space:nowrap">${t}</b></div><div class="muted">${shortId(o.id)} · ฿${o.paid} · ${fmt(o.t)}</div>
+ ${st==='done'?`<div class="acc">อีเมล/ยูส: ${esc(o.u)}<br>รหัสผ่าน: ${esc(o.pw)}${o.reply?`<br>📝 ${esc(o.reply)}`:''}</div><button class="btn ghost" style="margin-top:8px;padding:7px" onclick="copyTxt('${jsq(o.u+' / '+o.pw)}')">คัดลอก</button>`:''}
+ ${st==='wait'?`<div class="muted" style="margin-top:6px">ร้านกำลังตรวจสลิป เสร็จแล้วอีเมล/รหัสผ่านจะขึ้นตรงนี้</div>`:''}
+ ${st==='no'?`<div class="acc" style="color:var(--red)">${esc(o.reply||'สลิปไม่ถูกต้อง')} · ติดต่อร้านได้เลยค่ะ</div>`:''}</div>`}).join(''):'<div class="box muted" style="text-align:center">ยังไม่มีประวัติการซื้อ</div>'}
 function renderTops(){$('tops').innerHTML=myTops.length?myTops.map(x=>`<div class="box"><div class="row"><b style="color:${x.a<0?'var(--red)':'var(--mint)'}">${x.a<0?'−':'+'}฿${Math.abs(x.a)}</b><span class="muted">${fmt(x.t)}</span></div><div class="muted">${esc(x.by)}</div></div>`).join(''):'<div class="box" style="text-align:center">ยังไม่มีประวัติเติมเงิน<br><br><button class="btn" onclick="go(\'topup\')">เติมเครดิต</button></div>'}
 function pickSlip(inp){const f=inp.files[0];if(!f)return;inp.value='';
  const im=new Image();im.onload=()=>{const m=1600,s=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
@@ -595,6 +623,16 @@ async function sendSlip(){if(!slipData)return;const amt=+$('slipAmt').value;if(!
  catch(e){$('check').innerHTML=`<li style="color:var(--red)">✕ ${esc(e.message)}</li>`;$('slipBtn').disabled=false}}
 const SLIP_ST={wait:['⏳ รอร้านตรวจ','var(--plum)'],ok:['✓ เติมเครดิตแล้ว','var(--mint)'],no:['✕ ปฏิเสธ','var(--red)']};
 function renderMySlips(){const el=$('mySlips');if(!el)return;el.innerHTML=mySlips.length?mySlips.slice(0,20).map(x=>{const [t,c]=SLIP_ST[x.status]||SLIP_ST.wait;return `<div class="box"><div class="row"><b>฿${x.amount}</b><b style="color:${c}">${t}</b></div><div class="muted">${fmt(x.t)}${x.note?' · '+esc(x.note):''}</div></div>`}).join(''):'<div class="box muted" style="text-align:center">ยังไม่เคยส่งสลิป</div>'}
+async function pullStock(id){const o=orders.find(x=>x.id===id);if(!o)return;const it=(o.items||[])[0];if(!it)return toast('ออเดอร์นี้ไม่มีข้อมูลสินค้า');
+ const st=await db.collection('stock').where('pid','==',it.pid).limit(1).get();if(st.empty)return toast(`สต็อก "${it.pname}" ว่าง กรอกเองได้เลย`);
+ const d=st.docs[0].data();$('ou_'+id).value=d.u||'';$('op_'+id).value=d.pw||'';$('ou_'+id).dataset.sid=st.docs[0].id;$('ou_'+id).dataset.pid=it.pid;toast('ดึงจากสต็อกแล้ว ตรวจแล้วกดเสร็จสิ้น')}
+async function ordDone(id){const o=orders.find(x=>x.id===id);if(!o)return;const u=($('ou_'+id)?.value||'').trim(),pw=($('op_'+id)?.value||'').trim(),reply=($('or_'+id)?.value||'').trim();
+ if(!u)return toast('ใส่อีเมล/ยูสเซอร์ที่จะส่งให้ลูกค้าก่อน');if(!confirm(`ส่ง ${u} ให้ ${o.name||o.email} และปิดออเดอร์?`))return;
+ const b=db.batch();b.update(db.doc('orders/'+id),{status:'done',u,pw,reply,by:auth.currentUser.email,dt:TS()});
+ const sid=$('ou_'+id).dataset.sid,pid=$('ou_'+id).dataset.pid;if(sid&&pid){b.delete(db.doc('stock/'+sid));b.update(db.doc('products/'+pid),{stockCount:INC(-1)})}
+ await b.commit();toast('ดำเนินการเสร็จสิ้น ลูกค้าเห็นในประวัติการซื้อแล้ว')}
+async function ordReject(id){const o=orders.find(x=>x.id===id);if(!o)return;const reply=($('or_'+id)?.value||'').trim()||prompt('เหตุผลที่ปฏิเสธ (ลูกค้าจะเห็น)','สลิปไม่ถูกต้อง')||'';if(!confirm('ปฏิเสธออเดอร์นี้?'))return;
+ await db.doc('orders/'+id).update({status:'no',reply,by:auth.currentUser.email,dt:TS()});toast('ปฏิเสธออเดอร์แล้ว')}
 async function slipDecide(id,ok){const x=slips.find(s=>s.id===id);if(!x)return;const amt=+($('sa_'+id)?.value||x.amount),note=($('sn_'+id)?.value||'').trim();
  if(ok&&!(amt>0))return toast('ใส่ยอดที่จะเติม');if(!ok&&!confirm('ปฏิเสธสลิปนี้?'))return;
  const b=db.batch();if(ok){b.update(db.doc('users/'+x.uid),{credit:INC(amt)});b.set(db.collection('topups').doc(),{uid:x.uid,email:x.email,a:amt,by:'เติมจากสลิป (ร้านตรวจแล้ว)',t:TS()})}
@@ -635,7 +673,7 @@ async function checkPin(){let pin='1234';try{const d=await db.doc('settings/admi
 function startAdmin(){mqD={...shop.mq};thD=JSON.parse(JSON.stringify(shop.theme));fxD={...shop.fx};
  if(!adminOn){adminOn=true;
   adminUnsubs.push(db.collection('users').onSnapshot(s=>{members=s.docs.map(d=>({uid:d.id,...d.data()}));if((shop.users||0)!==members.length)saveShop({users:members.length});refresh()}));
-  adminUnsubs.push(db.collection('orders').orderBy('t','desc').limit(2000).onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()}));const sold=orders.reduce((a,o)=>a+(+o.q||+o.qty||1),0);if((shop.sold||0)!==sold)saveShop({sold});refresh()}));
+  adminUnsubs.push(db.collection('orders').orderBy('t','desc').limit(2000).onSnapshot(s=>{orders=s.docs.map(d=>({id:d.id,...d.data()}));const sold=orders.filter(o=>!o.status||o.status==='done').reduce((a,o)=>a+(+o.q||+o.qty||1),0);if((shop.sold||0)!==sold)saveShop({sold});refresh()}));
   adminUnsubs.push(db.collection('topups').orderBy('t','desc').limit(500).onSnapshot(s=>{tops=s.docs.map(d=>({id:d.id,...d.data()}));refresh()}));
  adminUnsubs.push(db.collection('slips').orderBy('t','desc').limit(500).onSnapshot(s=>{slips=s.docs.map(d=>({id:d.id,...d.data()}));refresh()}));
   adminUnsubs.push(db.collection('notis').orderBy('t','desc').limit(100).onSnapshot(s=>{notis=s.docs.map(d=>({id:d.id,...d.data()}));refresh()}))}
@@ -643,11 +681,11 @@ function startAdmin(){mqD={...shop.mq};thD=JSON.parse(JSON.stringify(shop.theme)
 function stopAdmin(){adminUnsubs.forEach(u=>u());adminUnsubs=[];adminOn=false;if($('v-admin').classList.contains('on'))go('home')}
 function aGo(t){aTab=t;if(t==='credit')document.querySelector('#a-credit .search').value=aq.cr||'';renderAdmin();scrollTo(0,0)}
 function renderAdmin(){
- const reqN=members.filter(m=>m.req).length,slipN=slips.filter(x=>x.status==='wait').length;
- $('admTabs').innerHTML=TABS.map(([k,n])=>`<button class="chip ${k===aTab?'on':''}" onclick="aGo('${k}')">${n}${k==='dash'&&unread()?`<span class="badge">${unread()}</span>`:''}${k==='mem'&&reqN?`<span class="badge">${reqN}</span>`:''}${k==='slip'&&slipN?`<span class="badge">${slipN}</span>`:''}</button>`).join('');
+ const reqN=members.filter(m=>m.req).length,slipN=slips.filter(x=>x.status==='wait').length,ordN=orders.filter(o=>o.status==='wait').length;
+ $('admTabs').innerHTML=TABS.map(([k,n])=>`<button class="chip ${k===aTab?'on':''}" onclick="aGo('${k}')">${n}${k==='dash'&&unread()?`<span class="badge">${unread()}</span>`:''}${k==='mem'&&reqN?`<span class="badge">${reqN}</span>`:''}${k==='slip'&&slipN?`<span class="badge">${slipN}</span>`:''}${k==='ord'&&ordN?`<span class="badge">${ordN}</span>`:''}</button>`).join('');
  document.querySelectorAll('.ap').forEach(x=>x.classList.toggle('on',x.id==='a-'+aTab));
- const today=new Date().toDateString(),tOrd=orders.filter(o=>tms(o.t)&&tms(o.t).toDateString()===today);
- $('kpi').innerHTML=`<div><span class="muted">ยอดขายวันนี้</span><b>฿${tOrd.reduce((a,o)=>a+(o.paid||0),0)}</b></div><div><span class="muted">คำสั่งซื้อวันนี้</span><b>${tOrd.length}</b></div><div><span class="muted">สมาชิก</span><b>${members.length}</b></div><div><span class="muted">สลิปรอตรวจ</span><b>${slipN}</b></div>`;
+ const today=new Date().toDateString(),tOrd=orders.filter(o=>(!o.status||o.status==='done')&&tms(o.t)&&tms(o.t).toDateString()===today);
+ $('kpi').innerHTML=`<div><span class="muted">ยอดขายวันนี้</span><b>฿${tOrd.reduce((a,o)=>a+(o.paid||0),0)}</b></div><div><span class="muted">คำสั่งซื้อวันนี้</span><b>${tOrd.length}</b></div><div><span class="muted">สมาชิก</span><b>${members.length}</b></div><div><span class="muted">ออเดอร์รอตรวจ</span><b>${ordN}</b></div>`;
  $('notiList').innerHTML=notis.length?notis.map(n=>`<button class="box ntf ${n.read?'':'new'}" style="width:100%;text-align:left" onclick="readNoti('${n.id}','${n.go}')">${n.read?'<span style="width:9px"></span>':'<span class="dot"></span>'}<div class="grow"><div>${esc(n.msg)}</div><div class="muted">${fmt(n.t)}</div></div></button>`).join(''):'<div class="box muted">ยังไม่มีการแจ้งเตือน</div>';
  $('prodList').innerHTML=P.filter(p=>has(p.n,aq.prod)).map(p=>`<div class="box row"><div class="th">${img(p.img,p.e)}</div><div class="grow"><b>${esc(p.n)}</b><div class="muted">${esc(catOf(p.c).n)} · ทั่วไป ฿${p.p} · ตัวแทน <span style="color:var(--mint)">฿${p.r}</span></div><div class="muted">สต็อก ${p.stockCount||0}</div></div><button class="btn ghost small" onclick="editProd('${p.id}')">แก้ไข</button></div>`).join('')||'<div class="box muted">ยังไม่มีสินค้า กด + เพิ่มสินค้า</div>';
  $('stockList').innerHTML=P.filter(p=>has(p.n,aq.stock)).map(p=>`<div class="box"><div class="row"><div class="th">${img(p.img,p.e)}</div><div class="grow"><b>${esc(p.n)}</b><div class="muted">เหลือ ${p.stockCount||0} ชิ้น</div></div><button class="btn small" onclick="stockSheet('${p.id}')">จัดการ</button></div></div>`).join('')||'<div class="box muted">ยังไม่มีสินค้า</div>';
@@ -658,7 +696,12 @@ function renderAdmin(){
  $('memList').innerHTML=ml.map(m=>`<div class="box"><div class="row"><div class="grow"><b>${esc(m.name)}</b> ${m.role==='reseller'?'<span class="tag">ตัวแทน</span>':'<span class="tag g">สมาชิก</span>'}<div class="muted">${esc(m.email)} · เครดิต ฿${m.credit||0} · สมัคร ${fmt(m.joined)}</div></div></div>
   ${m.req?`<div class="acc">📩 ขอเป็นตัวแทน · ${esc(m.req.note)} · ${fmt(m.req.t)}</div><div class="row" style="margin-top:8px"><button class="btn small" style="flex:1" onclick="decide('${m.uid}',1)">อนุมัติ</button><button class="btn ghost small" style="flex:1" onclick="decide('${m.uid}',0)">ปฏิเสธ</button></div>`:
   `<div class="row" style="margin-top:8px"><button class="btn ghost small" style="flex:1" onclick="db.doc('users/${m.uid}').update({role:'${m.role==='reseller'?'member':'reseller'}'})">${m.role==='reseller'?'ปลดเป็นสมาชิก':'ตั้งเป็นตัวแทน'}</button><button class="btn small" style="flex:1" onclick="aq.cr='${jsq(m.email)}';aGo('credit')">💳 เครดิต</button><button class="btn danger small" style="flex:1" onclick="delMem('${m.uid}')">ลบผู้ใช้</button></div>`}</div>`).join('')||'<div class="box muted">ไม่พบผู้ใช้</div>';
- $('ordList').innerHTML=orders.filter(o=>has(o.id,aq.ord)||has(shortId(o.id),aq.ord)||has(o.email,aq.ord)||has(o.pname,aq.ord)).map(o=>`<div class="box"><div class="row"><b>${esc(o.pname)}</b><b style="color:var(--plum)">฿${o.paid}</b></div><div class="muted">${shortId(o.id)} · ${esc(o.name)} · ${esc(o.email)} · ${fmt(o.t)}</div><div class="acc">${esc(o.u)} / ${esc(o.pw)}</div></div>`).join('')||'<div class="box muted">ยังไม่มีคำสั่งซื้อ</div>';
+ ['oWait','oDone','oNo','oAll'].forEach((id,i)=>$(id).classList.toggle('on',['wait','done','no','all'][i]===ordF));
+ $('ordList').innerHTML=orders.filter(o=>(ordF==='all'||(o.status||'done')===ordF)&&(has(o.id,aq.ord)||has(shortId(o.id),aq.ord)||has(o.email,aq.ord)||has(o.pname,aq.ord))).map(o=>{const st=o.status||'done',[t,c]=ost(o);return `<div class="box"><div class="row"><b>${esc(o.pname)}</b><b style="color:var(--plum)">฿${o.paid}</b></div><div class="muted">${shortId(o.id)} · ${esc(o.name)} · ${esc(o.email)} · ${fmt(o.t)}</div>${o.note?`<div class="muted">📝 ${esc(o.note)}</div>`:''}
+  ${o.slip?`<a href="${esc(o.slip)}" target="_blank"><img src="${esc(o.slip)}" alt="สลิป" style="display:block;max-width:100%;max-height:300px;margin:8px auto 0;border-radius:12px"></a>`:''}
+  ${st==='wait'?`<div class="field" style="margin-top:8px"><label>อีเมล / ยูสเซอร์ ที่จะส่งให้ลูกค้า</label><input id="ou_${o.id}" placeholder="a@mail.com"></div><div class="field"><label>รหัสผ่าน</label><input id="op_${o.id}" placeholder="pass123"></div><div class="field"><label>ข้อความถึงลูกค้า (ถ้ามี)</label><input id="or_${o.id}" placeholder="เช่น โปรไฟล์ 2 / ห้ามเปลี่ยนรหัส"></div>
+  <div class="row"><button class="btn ghost small" style="flex:1" onclick="pullStock('${o.id}')">ดึงจากสต็อก</button><button class="btn small" style="flex:2" onclick="ordDone('${o.id}')">✅ ดำเนินการเสร็จสิ้น</button></div><button class="btn danger small" style="margin-top:8px" onclick="ordReject('${o.id}')">ปฏิเสธออเดอร์</button>`
+  :`<div class="acc">${esc(o.u)} / ${esc(o.pw)}${o.reply?`<br>📝 ${esc(o.reply)}`:''}</div><div class="muted" style="margin-top:4px"><b style="color:${c}">${t}</b>${o.by?' โดย '+esc(o.by):''}${o.dt?' · '+fmt(o.dt):''}</div>`}</div>`}).join('')||'<div class="box muted">ไม่มีคำสั่งซื้อในหมวดนี้</div>';
  $('crList').innerHTML=members.filter(m=>has(m.name,aq.cr)||has(m.email,aq.cr)).map(m=>`<div class="box"><div class="row"><div class="grow"><b>${esc(m.name)}</b> ${m.role==='reseller'?'<span class="tag">ตัวแทน</span>':'<span class="tag g">สมาชิก</span>'}<div class="muted">${esc(m.email)} · เครดิตคงเหลือ</div></div><b style="color:var(--plum)">฿${m.credit||0}</b></div><div class="row" style="margin-top:8px"><input class="amt" id="cr_${m.uid}" inputmode="numeric" placeholder="จำนวนเงิน"><button class="btn small" onclick="giveCr('${m.uid}',1)">+ เติม</button><button class="btn danger small" onclick="giveCr('${m.uid}',-1)">− หัก</button></div></div>`).join('')||'<div class="box muted">ไม่พบลูกค้า</div>';
  $('topList').innerHTML=tops.filter(x=>has(x.email,aq.top)||has(x.a,aq.top)).map(x=>`<div class="box row"><div class="grow"><b style="color:${x.a<0?'var(--red)':'var(--mint)'}">${x.a<0?'−':'+'}฿${Math.abs(x.a)}</b> <span class="muted">${esc(x.email)}</span><div class="muted">${esc(x.by)} · ${fmt(x.t)}</div></div></div>`).join('')||'<div class="box muted">ยังไม่มีประวัติ</div>';
  $('rsSw').classList.toggle('on',!!shop.resellerOpen);$('rsState').textContent=shop.resellerOpen?'เปิดรับอยู่ ลูกค้าเห็นปุ่มส่งคำขอ':'ปิดรับอยู่ ซ่อนปุ่มส่งคำขอ';
