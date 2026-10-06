@@ -1,0 +1,7 @@
+{
+  "name": "superkepaccount",
+  "private": true,
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}
