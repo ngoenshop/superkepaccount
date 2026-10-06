@@ -255,13 +255,13 @@ input[type=range]{width:100%;accent-color:var(--plum)}
   </div>
 
   <div class="ap" id="a-prod">
-   <button class="btn" onclick="editProd()">+ เพิ่มสินค้า</button><div style="height:10px"></div>
+   <button class="btn" onclick="editProd()">+ เพิ่มสินค้าใหม่</button><div style="height:10px"></div>
    <input class="search" placeholder="ค้นหาสินค้า" oninput="aq.prod=this.value;renderAdmin()">
    <div id="prodList"></div>
   </div>
 
   <div class="ap" id="a-hl">
-   <div class="box"><div class="row"><input class="amt" style="width:100%" id="hlName" maxlength="20" placeholder="ชื่อไฮไลท์ใหม่ (เช่น Netflix)"><button class="btn small" onclick="addHl()">+ เพิ่ม</button></div><div class="muted" id="hlCount"></div></div>
+   <div class="box"><div class="row"><input class="amt" style="width:100%" id="hlName" maxlength="20" placeholder="ชื่อไฮไลท์ใหม่ (เช่น Netflix)"><button class="btn small" onclick="addHl()">💾 บันทึก</button></div><div class="muted" id="hlCount"></div></div>
    <div id="hlList"></div>
   </div>
   <div class="ap" id="a-rev"><div class="muted" style="margin-bottom:8px">รีวิวขึ้นหน้าเว็บทันที ลบได้ที่นี่</div><div id="rvAdm"></div></div>
@@ -273,7 +273,7 @@ input[type=range]{width:100%;accent-color:var(--plum)}
 
   <div class="ap" id="a-cat">
    <div class="box"><div class="row"><div class="th" id="catPrev">📁</div><div class="grow"><input class="amt" style="width:100%" id="catName" maxlength="40" placeholder="ชื่อหมวดหมู่ใหม่"></div></div>
-    <div class="row" style="margin-top:8px"><label class="btn ghost small upbtn" style="flex:1">เลือกรูปหมวด<input type="file" accept="image/*" onchange="upImg(this,u=>{newCatImg=u;$('catPrev').innerHTML=img(u)})"></label><button class="btn small" style="flex:1" onclick="addCat()">+ เพิ่มหมวดหมู่</button></div></div>
+    <div class="row" style="margin-top:8px"><label class="btn ghost small upbtn" style="flex:1">เลือกรูปหมวด<input type="file" accept="image/*" onchange="upImg(this,u=>{newCatImg=u;$('catPrev').innerHTML=img(u)})"></label><button class="btn small" style="flex:1" onclick="addCat()">💾 บันทึกหมวดหมู่ใหม่</button></div></div>
    <div id="catList"></div>
   </div>
 
@@ -529,7 +529,7 @@ function stShow(){const n=stH.imgs.length;$('stSub').textContent=`รีวิ�
 function stMove(d){stI+=d;if(stI<0)stI=0;if(stI>=stH.imgs.length)return closeStory();stShow()}
 function closeStory(){$('story').classList.remove('on')}
 async function addHl(){const n=$('hlName').value.trim();if(!n)return toast('ใส่ชื่อไฮไลท์');if(HL.length>=10)return toast('เพิ่มได้สูงสุด 10 ไฮไลท์');
- await db.collection('highlights').add({n,cover:'',imgs:[],order:HL.length,t:TS()});$('hlName').value='';toast('เพิ่มไฮไลท์แล้ว')}
+ await db.collection('highlights').add({n,cover:'',imgs:[],order:HL.length,t:TS()});$('hlName').value='';toast('บันทึกไฮไลท์แล้ว ดูในรายการด้านล่าง')}
 async function hlAddImgs(inp,id){const fs=[...inp.files];inp.value='';if(!fs.length)return;toast(`กำลังอัปโหลด ${fs.length} รูป...`);const urls=[];
  for(const f of fs){try{const fd=new FormData();fd.append('image',f);const r=await fetch('https://api.imgbb.com/1/upload?key='+IMGBB_KEY,{method:'POST',body:fd});const j=await r.json();if(j.success)urls.push(j.data.display_url||j.data.url)}catch(e){}}
  if(!urls.length)return toast('อัปโหลดไม่สำเร็จ');const h=HL.find(x=>x.id===id);await db.doc('highlights/'+id).update({imgs:[...(h.imgs||[]),...urls],cover:h.cover||urls[0]});toast(`เพิ่ม ${urls.length} รูปแล้ว`)}
@@ -702,7 +702,7 @@ async function addStock(id){const lines=$('stIn').value.split('\n').map(l=>l.tri
  const b=db.batch();lines.forEach(l=>{const i=l.indexOf('|');const u=i<0?l:l.slice(0,i),pw=i<0?'-':l.slice(i+1);b.set(db.collection('stock').doc(),{pid:id,u:u.trim(),pw:pw.trim(),t:TS()})});
  b.update(db.doc('products/'+id),{stockCount:INC(lines.length)});await b.commit();toast('เพิ่ม '+lines.length+' ชิ้นแล้ว');stockSheet(id)}
 async function delStock(pid,sid){const b=db.batch();b.delete(db.doc('stock/'+sid));b.update(db.doc('products/'+pid),{stockCount:INC(-1)});await b.commit();stockSheet(pid)}
-async function addCat(){const n=$('catName').value.trim();if(!n)return toast('ใส่ชื่อหมวดหมู่');await db.collection('categories').add({n,e:'📁',img:newCatImg,order:Date.now()});newCatImg='';$('catName').value='';$('catPrev').innerHTML='📁';toast('เพิ่มหมวดหมู่แล้ว')}
+async function addCat(){const n=$('catName').value.trim();if(!n)return toast('ใส่ชื่อหมวดหมู่');await db.collection('categories').add({n,e:'📁',img:newCatImg,order:Date.now()});newCatImg='';$('catName').value='';$('catPrev').innerHTML='📁';toast('บันทึกหมวดหมู่แล้ว ดูในรายการด้านล่าง')}
 async function saveCat(id){const n=($('cn_'+id)?.value||'').trim();if(!n)return toast('ใส่ชื่อหมวด');await db.doc('categories/'+id).update({n:n.slice(0,40)});toast('บันทึกหมวดหมู่แล้ว')}
 async function catMove(id,d){const i=cats.findIndex(x=>x.id===id),j=i+d;if(j<0||j>=cats.length)return;const b=db.batch();b.update(db.doc('categories/'+cats[i].id),{order:j});b.update(db.doc('categories/'+cats[j].id),{order:i});cats.forEach((c,k)=>{if(k!==i&&k!==j&&(c.order||0)!==k)b.update(db.doc('categories/'+c.id),{order:k})});await b.commit()}
 async function delCat(id){if(P.some(p=>p.c==id))return toast('ย้ายสินค้าออกจากหมวดนี้ก่อนลบ');if(confirm('ลบหมวดหมู่นี้?')){await db.doc('categories/'+id).delete();if(cat==id)cat=''}}
