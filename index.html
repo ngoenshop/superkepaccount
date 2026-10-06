@@ -180,7 +180,7 @@ input[type=range]{width:100%;accent-color:var(--plum)}
  <button class="back" onclick="closeAuth()">‹ กลับไปดูสินค้า</button>
  <div class="av" id="webLogo">B</div>
  <h1 style="text-align:center;margin:0;font-size:22px">superkepaccount</h1>
- <p class="sub" style="text-align:center;margin:4px 0 0">แอปพรีเมียมราคาดี</p>
+ <p class="sub" id="authSub" style="text-align:center;margin:4px 0 0">ไอจี-ทวิตเตอร์ ราคาถูก</p>
  <div class="seg"><button id="tLogin" class="on" onclick="authMode('login')">เข้าสู่ระบบ</button><button id="tReg" onclick="authMode('reg')">สมัครสมาชิก</button></div>
  <div class="field" id="fName" style="display:none"><label for="aName">ชื่อที่ใช้</label><input id="aName" placeholder="เช่น Beam Studio"></div>
  <div class="field"><label for="aEmail">อีเมล</label><input id="aEmail" type="email" ></div>
@@ -193,14 +193,14 @@ input[type=range]{width:100%;accent-color:var(--plum)}
 <div class="app" id="app">
  <div class="top" id="topbar">
   <div class="av" id="logo" onclick="logoTap()">S</div>
-  <div class="grow"><div class="name">superkepaccount</div><div class="sub">แอปพรีเมียมราคาดี</div></div>
+  <div class="grow"><div class="name" id="shopName">superkepaccount</div><div class="sub" id="shopSub">ไอจี-ทวิตเตอร์ ราคาถูก</div></div>
   <button class="credit" id="creditBtn" onclick="go('topup')"></button>
   <button class="circle" onclick="go('cart')" aria-label="ตะกร้า">🛒<span class="badge" id="badge"></span></button>
   <button class="circle" onclick="openMenu()" aria-label="เมนู" id="uInit">👤</button>
  </div>
 
  <section class="view on" id="v-home">
-  <div class="banner" id="banner"><div><b>superkepaccount</b><div style="font-size:13px">แอปพรีเมียมราคาดี ส่งไวทันใจ</div></div></div>
+  <div class="banner" id="banner"><div><b>superkepaccount</b><div style="font-size:13px">ไอจี-ทวิตเตอร์ ราคาถูก</div></div></div>
   <div class="mq" id="mq"><span id="mqText"></span></div>
   <div class="desc" id="desc"></div>
   <div class="tiles">
@@ -366,6 +366,7 @@ input[type=range]{width:100%;accent-color:var(--plum)}
   </div>
 
   <div class="ap" id="a-set">
+   <div class="box"><b>ชื่อร้าน / คำโปรย (ใต้ชื่อร้าน)</b><div class="field" style="margin-top:8px"><label>ชื่อร้าน</label><input id="setName" maxlength="40" placeholder="superkepaccount"></div><div class="field"><label>คำโปรยใต้ชื่อร้าน</label><input id="setSub" maxlength="60" placeholder="ไอจี-ทวิตเตอร์ ราคาถูก"></div><button class="btn" onclick="saveShop({name:$('setName').value.trim()||'superkepaccount',sub:$('setSub').value.trim()||''}).then(()=>toast('บันทึกชื่อร้านแล้ว'))">💾 บันทึก</button></div>
    <div class="box" id="subBox"><b>แอดมินรอง</b><div class="muted" style="margin:4px 0 8px">แอดมินรองใช้หลังบ้านได้ทุกอย่าง ยกเว้นจัดการแอดมิน (เฉพาะเจ้าของร้าน)</div>
     <div class="row"><input class="amt" id="subIn" type="email" placeholder="อีเมลแอดมินรอง"><button class="btn small" onclick="addSub()">+ มอบสิทธิ์</button></div>
     <div id="subList" style="margin-top:8px"></div></div>
@@ -652,7 +653,8 @@ function applyShop(){styleMq($('mq'),$('mqText'),shop.mq);$('mq').style.display=
  $('desc').innerHTML='<b>เกี่ยวกับร้าน</b>'+esc(shop.desc);$('desc').style.display=shop.desc?'':'none';
  const cts=(shop.ct||[]).filter(c=>c.v);
  $('ctList').innerHTML=cts.map(c=>`<a class="ct" href="${esc(ctLink(c))}" target="_blank" rel="noopener">${c.i} ${c.n}</a>`).join('');
- $('banner').innerHTML=shop.banner?img(shop.banner):'<div><b>superkepaccount</b><div style="font-size:13px">แอปพรีเมียมราคาดี ส่งไวทันใจ</div></div>';$('pvBanner').innerHTML=shop.banner?img(shop.banner):'แบนเนอร์';
+ $('banner').innerHTML=shop.banner?img(shop.banner):`<div><b>${esc(shop.name||'superkepaccount')}</b><div style="font-size:13px">${esc(shop.sub||'ไอจี-ทวิตเตอร์ ราคาถูก')}</div></div>`;
+ $('shopName').textContent=shop.name||'superkepaccount';$('shopSub').textContent=shop.sub||'ไอจี-ทวิตเตอร์ ราคาถูก';$('authSub').textContent=shop.sub||'ไอจี-ทวิตเตอร์ ราคาถูก';document.title=shop.name||'superkepaccount';$('pvBanner').innerHTML=shop.banner?img(shop.banner):'แบนเนอร์';
  $('logo').innerHTML=shop.logo?img(shop.logo):'B';$('pvShop').innerHTML=shop.logo?img(shop.logo):'B';
  if(shop.web){$('webLogo').innerHTML=img(shop.web);$('pvWeb').innerHTML=img(shop.web);$('fav').href=shop.web}}
 function ctLink(c){const v=c.v.trim();if(/^https?:\/\//.test(v))return v;
@@ -682,7 +684,8 @@ function startAdmin(){mqD={...shop.mq};thD=JSON.parse(JSON.stringify(shop.theme)
  fillFront();renderTheme();renderFx();loadSubs();go('admin')}
 function stopAdmin(){adminUnsubs.forEach(u=>u());adminUnsubs=[];adminOn=false;if($('v-admin').classList.contains('on'))go('home')}
 function aGo(t){aTab=t;if(t==='credit')document.querySelector('#a-credit .search').value=aq.cr||'';renderAdmin();scrollTo(0,0)}
-function renderAdmin(){
+function renderAdmin(){if($('setName')&&document.activeElement!==$('setName')&&document.activeElement!==$('setSub')){$('setName').value=shop.name||'';$('setSub').value=shop.sub||''}
+
  const reqN=members.filter(m=>m.req).length,slipN=slips.filter(x=>x.status==='wait').length,ordN=orders.filter(o=>o.status==='wait').length;
  $('admTabs').innerHTML=TABS.map(([k,n])=>`<button class="chip ${k===aTab?'on':''}" onclick="aGo('${k}')">${n}${k==='dash'&&unread()?`<span class="badge">${unread()}</span>`:''}${k==='mem'&&reqN?`<span class="badge">${reqN}</span>`:''}${k==='slip'&&slipN?`<span class="badge">${slipN}</span>`:''}${k==='ord'&&ordN?`<span class="badge">${ordN}</span>`:''}</button>`).join('');
  document.querySelectorAll('.ap').forEach(x=>x.classList.toggle('on',x.id==='a-'+aTab));
